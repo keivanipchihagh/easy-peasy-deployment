@@ -1,0 +1,41 @@
+version: '3.5'
+
+services:
+
+  # Postgres Server
+  postgres:
+    image: postgres:14-alpine
+    container_name: ${POSTGRES_CONTAINER_NAME}
+    restart: unless-stopped
+
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+      timeout: 10s
+      interval: 10s
+      retries: 10
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data  # Comment if you don't want the data to be preserved between restarts (can lead to loss of data!)
+      - ./scripts/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./scripts/data.sql:/docker-entrypoint-initdb.d/2-data.sql
+
+
+  # Postgres Exporter
+  postgres-exporter:
+    image: wrouesnel/postgres_exporter:v0.8.0
+    container_name: ${POSTGRES_CONTAINER_NAME}-exporter
+    restart: always
+
+    ports:
+      - ${POSTGRES_EXPORTER_PORT}:9187
+
+    environment:
+      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=${POSTGRES_SSL}
