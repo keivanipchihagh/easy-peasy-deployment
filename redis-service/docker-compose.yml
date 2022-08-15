@@ -1,0 +1,42 @@
+version: '3.5'
+
+services:
+
+  # Redis Server
+  redis:
+    image: redis:7.0-alpine
+    container_name: ${REDIS_CONTAINER_NAME}
+    restart: always
+
+    command:
+      - '--save 20 1'
+      - '--loglevel warning'
+      - '--requirepass ${REDIS_PASSWORD}'
+      - '--maxmemory 16M'
+      - '--maxmemory-policy allkeys-lru'
+
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+    ports:
+      - ${REDIS_PORT}:6379
+
+    # volumes:
+      - ./redis-data:/var/lib/redis                   # Comment if you don't want the data to be preserved between restarts
+      - ./redis.conf:/usr/local/etc/redis/redis.conf  # Comment if you don't want the data to be preserved between restarts
+
+
+  # Redis Exporter
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.43.0
+    container_name: ${REDIS_CONTAINER_NAME}-exporter
+    restart: always
+
+    ports:
+    - ${REDIS_EXPORTER_PORT}:9121
+
+    command:
+      - '--redis.addr=redis://${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}'
