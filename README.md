@@ -1,12 +1,13 @@
 # Easy Peasy Monitoring
 Preconfigured Grafana, Prometheus and Exporters docker-compose for faster deployment in production. All you do is to setup the `.env` and the rest is done for you!
 
-## Table of Contents
-- [Redis-service]()
-- [PostgreSQL-service]()
-- [Prometheus-service]()
+### Table of Contents
+- [Redis-service](https://github.com/keivanipchihagh/easy-peasy-monitoring#redis-service)
+- [PostgreSQL-service](https://github.com/keivanipchihagh/easy-peasy-monitoring#postgresql-service)
+- [Prometheus-service](https://github.com/keivanipchihagh/easy-peasy-monitoring#prometheus-service)
+- [Grafana-service](https://github.com/keivanipchihagh/easy-peasy-monitoring#grafana-service)
 
-#### Redis-service
+## Redis-service
 Running the `redis-service/docker-compose.yml` will create two containers for **Redis-Server** and **Redis-Exporter**.
 - The `docker-compose.yml` will set volumns by default to preserve data between restarts which is the recommended bahavior; However, you can comment out the the spesific lines to disable this behavior.
 - You also need to create a `.env` file with the following varibles:
@@ -22,7 +23,7 @@ REDIS_PASSWORD=<password>
 REDIS_EXPORTER_PORT=<unused-port>
 ```
 
-#### PostgreSQL-service
+## PostgreSQL-service
 Running the `postgres-service/docker-compose.yml` will create two containers for **Postgres-Server** and **Postgres-Exporter**.
 - There are two scripts `data.sql` and `schema.sql` that are executed on startup so that you don't have to manually run SQL scripts (*create tables, insert data, etc*).
 - By default, all the data that goes through the created PostgreSQL container are preserved which is the recommended approch; However, you can disable this behavior by commenting out the lines spesified in the `docker-compose.yml` file.
@@ -42,7 +43,7 @@ POSTGRES_PASSWORD=<password>
 POSTGRES_EXPORTER_PORT=<unused-port>
 ```
 
-#### Prometheus-service
+## Prometheus-service
 Running the `prometheus-service/docker-compose.yml` will create a single container for **Prometheus-Server**.
 - By default, all the data that goes through the created Prometheus container are preserved which is the recommended approch; However, you can disable this behavior by commenting out the line in the `docker-compose.yml` file.
 - You also need to create a `.env` file with the following varibles:
@@ -55,7 +56,7 @@ PROMETHEUS_PORT=<unused-port>
 **NOTE**: Use `prometheus-service/prometheus/prometheus.yml` and spesify the Exporter configurations. You can pass list of urls to the *target* parameter.
 
 
-#### Grafana-service
+## Grafana-service
 Running the `prometheus-service/docker-compose.yml` will create a single container for **Grafana-server**.
 - By default, all the data that goes through the created Grafana container are preserved which is the recommended approch; However, you can disable this behavior by commenting out the line in the `docker-compose.yml` file.
 - You can put any dashboard JSON files in the `grafana-service/grafana/dashboards` folder to be loaded on startup. (Check for [dashboards](https://grafana.com/grafana/dashboards))
@@ -70,8 +71,8 @@ GF_SECURITY_ADMIN_PASSWORD=<admin-password>
 GF_USERS_ALLOW_SIGN_UP=<what-new-users-to-create-account?|bool>
 GF_AUTH_DISABLE_LOGIN_FORM=false
 ```
-**NOTE #1**: From `grafana-service/grafana/provisioning/datasources/all.yml`, set the *URL* for Prometheus server container.
-**NOTE #2**: Use `grafana-service/grafana/provisioning/datasources/all.yml` and spesify the DataSources configurations. *Prometheus* is passed by default, but you can spesify other datasources as well.
+
+**NOTE #2**: Use `grafana-service/grafana/provisioning/datasources/all.yml` and spesify the DataSources configurations. *Prometheus* is passed by default, but you might want to change the IP/Port. You can also add more datasources.
 
 
 ### *Few Last Words* and *Best Practices*:
