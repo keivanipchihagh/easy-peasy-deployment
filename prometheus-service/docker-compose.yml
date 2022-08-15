@@ -1,0 +1,21 @@
+version: '3.5'
+
+services:
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    container_name: ${PROMETHEUS_CONTAINER_NAME}
+    restart: always 
+
+    ports:
+      - ${PROMETHEUS_PORT}:9090
+  
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-lifecycle'
+
+    volumes:
+      # - ./prometheus-data:/prometheus # Comment if you don't want the data to be preserved between restarts (can lead to loss of data!)
+      - ./prometheus/rules.yml:/etc/prometheus/rules.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml

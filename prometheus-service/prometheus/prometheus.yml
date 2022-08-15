@@ -1,0 +1,26 @@
+global:
+  scrape_interval:     10s
+  evaluation_interval: 10s
+
+rule_files:
+  - alert.yml
+
+scrape_configs:
+
+  # Prometheus
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['172.17.0.1:9090']
+
+  # Redis Exporters
+  - job_name: redis_exporters
+    scrape_interval: 10s
+    static_configs:
+    - targets: ['172.17.0.1:9121']
+
+  # Postgres Exporters
+  - job_name: postgres-exporters
+    scrape_interval: 10s  
+    static_configs:
+    - targets: ['172.17.0.1:9187']
