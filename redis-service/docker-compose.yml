@@ -40,3 +40,6 @@ services:
 
     command:
       - '--redis.addr=redis://${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}'
+    
+    labels:
+      org.label-schema.group: "monitoring"

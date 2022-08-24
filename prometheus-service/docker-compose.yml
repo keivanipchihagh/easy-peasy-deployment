@@ -22,4 +22,4 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
     labels:
-      org.label-schema.group: "monitoring"
+      org.label-schema.group: "monitoring"    

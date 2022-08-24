@@ -19,7 +19,7 @@ services:
       GF_AUTH_DISABLE_LOGIN_FORM: ${GF_AUTH_DISABLE_LOGIN_FORM:-false}
 
     volumes:
-      - grafana-data:/var/lib/grafana # data persistence
+      - ./grafana-data:/var/lib/grafana # data persistence
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/config.ini:/etc/grafana/config.ini
