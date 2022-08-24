@@ -7,6 +7,7 @@ services:
     image: grafana/grafana-enterprise:9.0.5
     container_name: ${GRAFANA_CONTAINER_NAME}
     restart: always
+    user: "$UID:$GID"
 
     ports:
       - ${GF_PORT}:3000
@@ -18,10 +19,11 @@ services:
       GF_AUTH_DISABLE_LOGIN_FORM: ${GF_AUTH_DISABLE_LOGIN_FORM:-false}
 
     volumes:
-      - grafana-data:/var/lib/grafana # Comment if you don't want the data to be preserved between restarts (can lead to loss of data!)
+      - grafana-data:/var/lib/grafana # data persistence
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/config.ini:/etc/grafana/config.ini
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards    
 
-    user: "$UID:$GID"
+    labels:
+      org.label-schema.group: "monitoring"

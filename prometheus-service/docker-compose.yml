@@ -6,7 +6,8 @@ services:
   prometheus:
     image: prom/prometheus:v2.30.3
     container_name: ${PROMETHEUS_CONTAINER_NAME}
-    restart: always 
+    restart: always
+    user: "$UID:$GID"
 
     ports:
       - ${PROMETHEUS_PORT}:9090
@@ -16,8 +17,9 @@ services:
       - '--web.enable-lifecycle'
 
     volumes:
-      - ./prometheus-data:/prometheus # Comment if you don't want the data to be preserved between restarts (can lead to loss of data!)
+      - ./prometheus-data:/prometheus # data persistence
       - ./prometheus/rules.yml:/etc/prometheus/rules.yml
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
-    user: "$UID:$GID"
+    labels:
+      org.label-schema.group: "monitoring"
