@@ -18,7 +18,10 @@ services:
       GF_AUTH_DISABLE_LOGIN_FORM: ${GF_AUTH_DISABLE_LOGIN_FORM:-false}
 
     volumes:
+      - grafana-data:/var/lib/grafana # Comment if you don't want the data to be preserved between restarts (can lead to loss of data!)
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/config.ini:/etc/grafana/config.ini
       - ./grafana/dashboards:/var/lib/grafana/dashboards
+
+    user: "$UID:$GID"

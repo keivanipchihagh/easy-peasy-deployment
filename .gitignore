@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# other
+grafana-service/grafana-data
+prometheus-service/prometheus-data
