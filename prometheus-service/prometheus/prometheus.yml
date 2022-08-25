@@ -24,3 +24,15 @@ scrape_configs:
     scrape_interval: 10s  
     static_configs:
     - targets: ['172.17.0.1:9187']
+  
+  # Node Exporters
+  - job_name: node-exporters
+    scrape_interval: 10s  
+    static_configs:
+    - targets: ['172.17.0.1:9100']
+  
+  # Cadvisors
+  - job_name: cadvisor
+    scrape_interval: 10s  
+    static_configs:
+    - targets: ['172.17.0.1:8080']

@@ -1,0 +1,26 @@
+version: '3.5'
+
+services:
+
+  # Node Exporter
+  nodeexporter:
+    image: prom/node-exporter:v1.3.1
+    container_name: ${NODE_CONTAINER_NAME}-exporter
+    restart: always
+
+    ports:
+      - ${NODE_PORT}:9100
+
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+
+    labels:
+      org.label-schema.group: "monitoring"
