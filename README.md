@@ -79,3 +79,9 @@ GF_AUTH_DISABLE_LOGIN_FORM=false
 - To check for available/unused ports, run: `netstat -tulnap`.
 - It's a good practice to name your exporters the same as the container, but with the `-exporter` suffix. This way you can find and manage them much easier when you have many services each with its own Exporters.
 - Since each service requires a `.env` to operate, create one in the root directory to serve them all.
+
+
+### Used Dashboards
+- [Docker and system monitoring](https://grafana.com/grafana/dashboards/893-main/)
+- [PostgreSQL Database](https://grafana.com/grafana/dashboards/9628-postgresql-database/)
+- [Redis Dashboard for Prometheus Redis Exporter (helm stable/redis-ha)](https://grafana.com/grafana/dashboards/11835-redis-dashboard-for-prometheus-redis-exporter-helm-stable-redis-ha/)
