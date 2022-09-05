@@ -13,6 +13,7 @@ Preconfigured Grafana, Prometheus and Exporters docker-compose for faster deploy
 
 
 ### Used Dashboards
+All credits goes to the creators of these dashboards. I just tweeked them a bit to make them easier to work with
 - [Docker and system monitoring](https://grafana.com/grafana/dashboards/893-main/)
 - [PostgreSQL Database](https://grafana.com/grafana/dashboards/9628-postgresql-database/)
 - [Redis Dashboard for Prometheus Redis Exporter (helm stable/redis-ha)](https://grafana.com/grafana/dashboards/11835-redis-dashboard-for-prometheus-redis-exporter-helm-stable-redis-ha/)
