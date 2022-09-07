@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.3"
 
 services:
 
@@ -25,5 +25,10 @@ services:
       - ./grafana/config.ini:/etc/grafana/config.ini
       - ./grafana/dashboards:/var/lib/grafana/dashboards    
 
-    labels:
-      org.label-schema.group: "monitoring"
+    networks:
+      - nginx-proxy-manager
+
+
+networks:
+  nginx-proxy-manager:
+    external: true

@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.3"
 
 services:
 
@@ -17,10 +17,7 @@ services:
       - /:/rootfs:ro
 
     command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-
-    labels:
-      org.label-schema.group: "monitoring"
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"

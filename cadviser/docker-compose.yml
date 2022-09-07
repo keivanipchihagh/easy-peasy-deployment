@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.3'
 
 services:
 
@@ -21,6 +21,3 @@ services:
 
     ports:
       - ${CADVISOR_PORT}:8080
-
-    labels:
-      org.label-schema.group: "monitoring"

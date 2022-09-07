@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.3"
 
 services:
 
@@ -13,13 +13,18 @@ services:
       - ${PROMETHEUS_PORT}:9090
   
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--web.enable-lifecycle'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-lifecycle"
 
     volumes:
       - ./prometheus-data:/prometheus # data persistence
       - ./prometheus/rules.yml:/etc/prometheus/rules.yml
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
-    labels:
-      org.label-schema.group: "monitoring"    
+    networks:
+      - nginx-proxy-manager
+
+
+networks:
+  nginx-proxy-manager:
+    external: true
