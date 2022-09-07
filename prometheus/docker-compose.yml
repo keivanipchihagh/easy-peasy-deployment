@@ -18,8 +18,8 @@ services:
 
     volumes:
       - ./prometheus-data:/prometheus # data persistence
-      - ./prometheus/rules.yml:/etc/prometheus/rules.yml
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./rules.yml:/etc/prometheus/rules.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
     networks:
       - nginx-proxy-manager
