@@ -23,7 +23,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
     volumes:
-      # - ./postgres-data:/var/lib/postgresql/data  # Comment if you don't want the data to be preserved between restarts (can lead to loss of data!)
+      - ./postgres-data:/var/lib/postgresql/data # data persistence
       - ./scripts/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
       - ./scripts/data.sql:/docker-entrypoint-initdb.d/2-data.sql
 
