@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+  nginx-proxy-manager:
+    container_name: nginx-proxy-manager
+    image: jc21/nginx-proxy-manager:github-pr-2250
+    restart: unless-stopped # Ensure proxy manager survives crashes
+
+    ports:
+      - "80:80" # HTTP port
+      - "81:81" # Admin UI
+      - "443:443" # HTTPS port
+
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+    healthcheck:
+      test: ["CMD", "/bin/check-health"]
+      timeout: 3s
+      interval: 10s
+   
+    networks:
+      - nginx-proxy-manager
+
+
+networks:
+  nginx-proxy-manager:
+    external: true
