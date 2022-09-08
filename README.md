@@ -77,6 +77,8 @@ All credits goes to the creators of these dashboards. I just tweeked them a bit 
   ```
   - **Note 1**: most of the variables spesified above have default values in-case you forget to initialize them, such as *names* and *ports*; However, that is not the case with sensitive variables such as *usernames* and *passwords*, for security reasons!
   - **Note 2**: By default, all *exporters* and *agents* that are dependent to a parent container are named with the prefix of the parent container for ease of identification. So just change the parent container's name and the children will follow! (eg. `<parent-container>` & `<parent-container>-exporter`, `<parent-container>` & `<parent-container>-agent`)
+  
+2.5. Replace **`<machine-ip> in prometheus/prometheus.yml`** with your .
 
 3. **Building the toolkit**: Every module comes with a `build.sh`. Just *cd* to the directory, run it with `bash build.sh` and that's it!
 
