@@ -21,3 +21,11 @@ services:
       - "--path.rootfs=/rootfs"
       - "--path.sysfs=/host/sys"
       - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    
+    networks:
+      - nginx-proxy-manager
+
+
+networks:
+  nginx-proxy-manager:
+    external: true

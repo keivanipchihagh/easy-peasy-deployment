@@ -21,3 +21,11 @@ services:
 
     ports:
       - ${CADVISOR_PORT:-8080}:8080
+    
+    networks:
+      - nginx-proxy-manager
+
+
+networks:
+  nginx-proxy-manager:
+    external: true
