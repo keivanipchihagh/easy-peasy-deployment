@@ -12,8 +12,8 @@ Painless deployment of your favorite technologies in a snap!
 - [PostgreSQL](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/postgres) - comes with a [postgres-exporter](https://github.com/prometheus-community/postgres_exporter) for exposing monitoring metrics for _Prometheus_.
 - [Prometheus](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/prometheus)
 - [Grafana](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/grafana) - comes with a set of preconfigured dashboards.
-- [Cadvisor](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/exporters/cadviser)
-- [Node-Exporter](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/exporters/node-exporter)
+- [Cadvisor](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/cadviser)
+- [Node-Exporter](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/node-exporter)
 - [Portainer](https://github.com/keivanipchihagh/easy-peasy-deployment/tree/main/portainer) - comes with a [portainer-agent](https://docs.portainer.io/v/ce-2.9/start/install/agent/docker/linux) for exposing Docker information for _Portainer_.
 - [Nginx-Proxy-Manager](https://github.com/keivanipchihagh/easy-peasy-deployment/tree/main/nginx-proxy-manager)
 
@@ -80,5 +80,5 @@ All credits goes to the creators of these dashboards. I just tweeked them a bit 
 
 3. **Building the toolkit**: Every module comes with a `build.sh`. Just *cd* to the directory, run it with `bash build.sh` and that's it!
 
-### 🤝 Contributing
+### Contributing
 Since this an ongoing project, you can contribute by adding more exporters or dashboards. You can also add more modules to the project. If you have any questions, feel free to open an issue.
