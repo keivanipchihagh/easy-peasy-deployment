@@ -132,3 +132,6 @@ dmypy.json
 grafana/grafana-data
 prometheus/prometheus-data
 portainer/portainer-data
+postgres/postgres-data
+redis/redis-data
+redis/redis.conf
