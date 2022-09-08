@@ -1,22 +1,75 @@
-# Easy Peasy Monitoring
-Preconfigured Grafana, Prometheus and Exporters docker-compose for faster deployment in production. All you do is to setup the `.env` and the rest is done for you!
-
-**NOTE:** The `.env` is not ignored in this repo and you can easily see what is going on, so does everyone else! Please do add the `.env` to your `.gitignore` file.
+# Easy Peasy Deployment
+Preconfigured _Grafana_, _Prometheus_, Exporters and other useful containers for faster deployment time in production. All you need to do is to setup the `.env` and the rest is already done for you!
 
 ### Modules
-- [Redis-service](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/redis-service): Redis Cache database and its exporter
-- [PostgreSQL-service](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/postgres-service): PostgreSQL Database and its exporter
-- [Prometheus-service](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/prometheus-service): Pormetheus Server
-- [Grafana-service](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/grafana-service): Grafana Server
-- [Cadvisor-exporter](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/exporters/cadviser): Cadvisor exporter
-- [Node-exporter](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/exporters/node-exporter): Node exporter
+- [Redis](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/redis-service) - comes with a [redis-exporter](https://github.com/oliver006/redis_exporter) for exposing monitering metrics for _Prometheus_.
+- [PostgreSQL](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/postgres-service) - comes with a [postgres-exporter](https://github.com/prometheus-community/postgres_exporter) for exposing monitoring metrics for _Prometheus_.
+- [Prometheus](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/prometheus-service)
+- [Grafana](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/grafana-service) - comes with a set of preconfigured dashboards.
+- [Cadvisor](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/exporters/cadviser)
+- [Node-Exporter](https://github.com/keivanipchihagh/easy-peasy-monitoring/tree/main/exporters/node-exporter)
+- [Portainer](https://github.com/keivanipchihagh/easy-peasy-deployment/tree/main/portainer) - comes with a [portainer-agent](https://docs.portainer.io/v/ce-2.9/start/install/agent/docker/linux) for exposing Docker information for _Portainer_.
+- [Nginx-Proxy-Manager](https://github.com/keivanipchihagh/easy-peasy-deployment/tree/main/nginx-proxy-manager)
 
 
-### Used Dashboards
-All credits goes to the creators of these dashboards. I just tweeked them a bit to make them easier to work with
+### Preconfigured Dashboards
+All credits goes to the creators of these dashboards. I just tweeked them a bit to make them easier to work with.
 - [Docker and system monitoring](https://grafana.com/grafana/dashboards/893-main/)
 - [PostgreSQL Database](https://grafana.com/grafana/dashboards/9628-postgresql-database/)
 - [Redis Dashboard for Prometheus Redis Exporter (helm stable/redis-ha)](https://grafana.com/grafana/dashboards/11835-redis-dashboard-for-prometheus-redis-exporter-helm-stable-redis-ha/)
+
+### Setting up the `.env`
+Create a `.env` file in the root directory (so that all the modules can access it, instead of having a seperate `.env` for each module) that looks something like the following:
+
+```python
+# Grafana
+GRAFANA_CONTAINER_NAME=grafana
+GF_PORT=3000
+GF_SECURITY_ADMIN_USER=<username>
+GF_SECURITY_ADMIN_PASSWORD=<password>
+GF_USERS_ALLOW_SIGN_UP=true
+GF_AUTH_DISABLE_LOGIN_FORM=false
+
+# Prometheus
+PROMETHEUS_CONTAINER_NAME=prometheus
+PROMETHEUS_PORT=9090
+
+# PostgreSQL
+POSTGRES_CONTAINER_NAME=postgres
+POSTGRES_HOST=<machine-ip>
+POSTGRES_PORT=5432
+POSTGRES_DB=postgres
+POSTGRES_SSL=disable
+POSTGRES_USER=<username>
+POSTGRES_PASSWORD=<password>
+POSTGRES_EXPORTER_PORT=9187
+
+# Redis
+REDIS_CONTAINER_NAME=redis
+REDIS_HOST=<machine-ip>
+REDIS_PORT=6379
+REDIS_PASSWORD=admin
+REDIS_EXPORTER_PORT=9121
+
+# Node-Exporter
+NODE_CONTAINER_NAME=node
+NODE_PORT=9100
+
+# Cadvisor
+CADVISOR_CONTAINER_NAME=cadvisor
+CADVISOR_PORT=8080
+
+# Portainer
+PORTAINER_CONTAINER_NAME=portainer
+PORTAINER_PORT=9000
+PORTAINER_AGENT_PORT=9001
+
+# Nginx-Proxy-Manager
+NPM_CONTAINER_NAME=nginx-proxy-manager
+NPM_PORT=81
+```
+- **Note 1**: most of the variables spesified above have default values in-case you forget to initialize them, such as *names* and *ports*; However, that is not the case with sensitive variables such as *usernames* and *passwords*, for security reasons!
+- **Note 2**: By default, all *exporters* and *agents* that are dependent to a parent container are named with the prefix of the parent container for ease of identification. So just change the parent container's name and the children will follow! (eg. `<parent-container>` & `<parent-container>-exporter`, `<parent-container>` & `<parent-container>-agent`)
 
 ### 🤝 Contributing
 Since this an ongoing project, you can contribute by adding more exporters or dashboards. You can also add more modules to the project. If you have any questions, feel free to open an issue.
