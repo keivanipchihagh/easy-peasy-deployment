@@ -5,12 +5,12 @@ services:
   # Portainer
   portainer:
     image: portainer/portainer-ce:2.15.0-alpine
-    container_name: ${PORTAINER_CONTAINER_NAME}
+    container_name: ${PORTAINER_CONTAINER_NAME:-portainer}
     restart: unless-stopped
-    command: -H tcp://portainer-agent:${PORTAINER_AGENT_PORT} --tlsskipverify
+    command: -H tcp://portainer-agent:${PORTAINER_AGENT_PORT:-9001} --tlsskipverify
 
     ports:
-      - ${PORTAINER_PORT}:9000
+      - ${PORTAINER_PORT:-9000}:9000
 
     security_opt:
       - no-new-privileges:true
@@ -27,18 +27,18 @@ services:
   # Agent
   portainer-agent:
     image: portainer/agent:2.9.3
-    container_name: ${PORTAINER_AGENT_CONTAINER_NAME}
+    container_name: ${PORTAINER_CONTAINER_NAME:-portainer}-agent
     restart: always
 
     environment:
-      AGENT_PORT: ${PORTAINER_AGENT_PORT}
+      AGENT_PORT: ${PORTAINER_AGENT_PORT:-9001}
       # LOG_LEVEL: debug
     
     depends_on:
       - portainer
     
     expose:
-      - ${PORTAINER_AGENT_PORT}
+      - ${PORTAINER_AGENT_PORT:-9001}
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

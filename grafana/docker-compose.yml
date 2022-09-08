@@ -5,12 +5,12 @@ services:
   # Grafana
   grafana:
     image: grafana/grafana-enterprise:9.0.5
-    container_name: ${GRAFANA_CONTAINER_NAME}
+    container_name: ${GRAFANA_CONTAINER_NAME:-grafana}
     restart: always
     user: "$UID:$GID"
 
     ports:
-      - ${GF_PORT}:3000
+      - ${GF_PORT:-3000}:3000
 
     environment:
       GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}

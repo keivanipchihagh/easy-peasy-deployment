@@ -5,11 +5,11 @@ services:
   # Postgres Server
   postgres:
     image: postgres:14-alpine
-    container_name: ${POSTGRES_CONTAINER_NAME}
+    container_name: ${POSTGRES_CONTAINER_NAME:-postgres}
     restart: unless-stopped
 
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
 
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
@@ -18,7 +18,7 @@ services:
       retries: 10
 
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
@@ -29,14 +29,11 @@ services:
   # Postgres Exporter
   postgres-exporter:
     image: wrouesnel/postgres_exporter:v0.8.0
-    container_name: ${POSTGRES_CONTAINER_NAME}-exporter
+    container_name: ${POSTGRES_CONTAINER_NAME:-postgres}-exporter
     restart: always
 
     ports:
-      - ${POSTGRES_EXPORTER_PORT}:9187
+      - ${POSTGRES_EXPORTER_PORT:-9187}:9187
 
     environment:
-      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=${POSTGRES_SSL}
-    
-    labels:
-      org.label-schema.group: "monitoring"
+      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-postgres}?sslmode=${POSTGRES_SSL:-disable}

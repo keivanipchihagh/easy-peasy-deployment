@@ -5,12 +5,12 @@ services:
   # Prometheus
   prometheus:
     image: prom/prometheus:v2.30.3
-    container_name: ${PROMETHEUS_CONTAINER_NAME}
+    container_name: ${PROMETHEUS_CONTAINER_NAME:-prometheus}
     restart: always
     user: "$UID:$GID"
 
     ports:
-      - ${PROMETHEUS_PORT}:9090
+      - ${PROMETHEUS_PORT:-9090}:9090
   
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"

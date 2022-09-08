@@ -2,13 +2,13 @@ version: "3.3"
 
 services:
   nginx-proxy-manager:
-    container_name: nginx-proxy-manager
+    container_name: ${NPM_CONTAINER_NAME:-nginx-proxy-manager}
     image: jc21/nginx-proxy-manager:github-pr-2250
     restart: unless-stopped # Ensure proxy manager survives crashes
 
     ports:
       - "80:80" # HTTP port
-      - "81:81" # Admin UI
+      - "${NPM_PORT:-81}:81" # Admin UI
       - "443:443" # HTTPS port
 
     volumes:
@@ -19,7 +19,7 @@ services:
       test: ["CMD", "/bin/check-health"]
       timeout: 3s
       interval: 10s
-   
+
     networks:
       - nginx-proxy-manager
 

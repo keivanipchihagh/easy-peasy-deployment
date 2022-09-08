@@ -5,7 +5,7 @@ services:
   # Redis Server
   redis:
     image: redis:7.0-alpine
-    container_name: ${REDIS_CONTAINER_NAME}
+    container_name: ${REDIS_CONTAINER_NAME:-redis}
     restart: always
 
     command:
@@ -22,7 +22,7 @@ services:
       retries: 10
 
     ports:
-      - ${REDIS_PORT}:6379
+      - ${REDIS_PORT:-6379}:6379
 
     volumes:
       - ./redis-data:/var/lib/redis                   # Comment if you don't want the data to be preserved between restarts
@@ -32,14 +32,11 @@ services:
   # Redis Exporter
   redis-exporter:
     image: oliver006/redis_exporter:v1.43.0
-    container_name: ${REDIS_CONTAINER_NAME}-exporter
+    container_name: ${REDIS_CONTAINER_NAME:-redis}-exporter
     restart: always
 
     ports:
-    - ${REDIS_EXPORTER_PORT}:9121
+    - ${REDIS_EXPORTER_PORT:-9121}:9121
 
     command:
-      - '--redis.addr=redis://${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}'
-    
-    labels:
-      org.label-schema.group: "monitoring"
+      - '--redis.addr=redis://${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT:-6379}'
