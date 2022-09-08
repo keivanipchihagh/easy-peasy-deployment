@@ -24,9 +24,6 @@ services:
 
     volumes:
       - ./postgres-data:/var/lib/postgresql/data # data persistence
-    
-    networks:
-      - nginx-proxy-manager
 
 
   # Postgres Exporter
@@ -40,8 +37,3 @@ services:
 
     environment:
       - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-postgres}?sslmode=${POSTGRES_SSL:-disable}
-
-
-networks:
-  nginx-proxy-manager:
-    external: true
