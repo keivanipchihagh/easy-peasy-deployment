@@ -135,3 +135,4 @@ portainer/portainer-data
 postgres/postgres-data
 redis/redis-data
 redis/redis.conf
+pgadmin/pgadmin-data
