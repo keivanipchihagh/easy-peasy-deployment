@@ -1,0 +1,53 @@
+version: "3.3"
+
+services:
+
+  # Portainer
+  portainer:
+    image: portainer/portainer-ce:2.15.0-alpine
+    container_name: ${PORTAINER_CONTAINER_NAME}
+    restart: unless-stopped
+    command: -H tcp://portainer-agent:${PORTAINER_AGENT_PORT} --tlsskipverify
+
+    ports:
+      - ${PORTAINER_PORT}:9000
+
+    security_opt:
+      - no-new-privileges:true
+
+    volumes:
+      - ./portainer-data:/data # data persistence
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    
+    networks:
+      - agent_network
+
+
+  # Agent
+  portainer-agent:
+    image: portainer/agent:2.9.3
+    container_name: ${PORTAINER_AGENT_CONTAINER_NAME}
+    restart: always
+
+    environment:
+      AGENT_PORT: ${PORTAINER_AGENT_PORT}
+      # LOG_LEVEL: debug
+    
+    depends_on:
+      - portainer
+    
+    expose:
+      - ${PORTAINER_AGENT_PORT}
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    
+    networks:
+      - agent_network
+
+
+networks:
+  agent_network:
+    external: true
