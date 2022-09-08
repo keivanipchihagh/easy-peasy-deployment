@@ -12,14 +12,14 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
 
     healthcheck:
-      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+      test: ["CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB:-postgres}", "-U", "${POSTGRES_USER:-postgres}"]
       timeout: 10s
       interval: 10s
       retries: 10
 
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
-      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
     volumes:
