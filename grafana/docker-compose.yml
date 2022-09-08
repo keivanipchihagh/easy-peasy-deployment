@@ -20,10 +20,10 @@ services:
 
     volumes:
       - ./grafana-data:/var/lib/grafana # data persistence
-      - ./provisioning/dashboards:/etc/grafana/provisioning/dashboards
-      - ./provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./provisioning/dashboards:/etc/grafana/provisioning/dashboards # data persistence
+      - ./provisioning/datasources:/etc/grafana/provisioning/datasources # default datasources
       - ./config.ini:/etc/grafana/config.ini
-      - ./dashboards:/var/lib/grafana/dashboards    
+      - ./dashboards:/var/lib/grafana/dashboards # default dashboards
 
     networks:
       - nginx-proxy-manager
