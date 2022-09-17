@@ -23,9 +23,9 @@ services:
       - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
     
     networks:
-      - nginx-proxy-manager
+      - epd
 
 
 networks:
-  nginx-proxy-manager:
+  epd:
     external: true

@@ -22,9 +22,9 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
     networks:
-      - nginx-proxy-manager
+      - epd
 
 
 networks:
-  nginx-proxy-manager:
+  epd:
     external: true

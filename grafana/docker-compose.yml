@@ -26,9 +26,9 @@ services:
       - ./dashboards:/var/lib/grafana/dashboards # default dashboards
 
     networks:
-      - nginx-proxy-manager
+      - epd
 
 
 networks:
-  nginx-proxy-manager:
+  epd:
     external: true

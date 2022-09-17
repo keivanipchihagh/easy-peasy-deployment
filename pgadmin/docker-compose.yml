@@ -21,9 +21,9 @@ services:
       - "${PGADMIN_PORT:-80}:80"
 
     networks:
-      - nginx-proxy-manager
+      - epd
 
 
 networks:
-  nginx-proxy-manager:
+  epd:
     external: true

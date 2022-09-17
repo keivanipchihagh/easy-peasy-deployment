@@ -21,9 +21,9 @@ services:
       interval: 10s
 
     networks:
-      - nginx-proxy-manager
+      - epd
 
 
 networks:
-  nginx-proxy-manager:
+  epd:
     external: true

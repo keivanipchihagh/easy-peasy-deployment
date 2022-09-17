@@ -27,6 +27,9 @@ services:
     volumes:
       - ./redis-data:/var/lib/redis # data persistence
       - ./redis.conf:/usr/local/etc/redis/redis.conf # data persistence
+    
+    networks:
+      - epd
 
 
   # Redis Exporter
@@ -40,3 +43,11 @@ services:
 
     command:
       - '--redis.addr=redis://${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT:-6379}'
+    
+    networks:
+      - epd
+
+
+networks:
+  epd:
+    external: true

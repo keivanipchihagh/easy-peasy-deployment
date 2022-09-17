@@ -21,7 +21,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     
     networks:
-      - nginx-proxy-manager
+      - epd
 
 
   # Agent
@@ -45,9 +45,9 @@ services:
       - /var/lib/docker/volumes:/var/lib/docker/volumes
     
     networks:
-      - nginx-proxy-manager
+      - epd
 
 
 networks:
-  nginx-proxy-manager:
+  epd:
     external: true
