@@ -1,0 +1,31 @@
+version: "3.5"
+
+services:
+
+  # traefik
+  traefik:
+    image: traefik:v2.8
+    container_name: ${TRAEFIK_CONTAINER_NAME}
+    restart: always
+
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:${TRAEFIK_ENTRY_PORT}"
+
+    ports:
+      - ${TRAEFIK_ENTRY_PORT}:80
+      - ${TRAEFIK_PORT}:8080
+
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    
+    networks:
+      - epd
+
+
+networks:
+  epd:
+    external: true
