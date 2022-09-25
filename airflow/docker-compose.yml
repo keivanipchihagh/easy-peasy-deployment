@@ -4,7 +4,7 @@ version: '3.4'
 x-airflow-common:
   &airflow-common
   image: apache/airflow:2.3.0
-  user: "${AIRFLOW_UID:-50000}:0"
+  user: "${AIRFLOW_UID:-50000}:${AIRFLOW_UID:-50000}"
 
   env_file:
     - ../.env
@@ -53,7 +53,7 @@ services:
       test: ["CMD", "curl", "--fail", "http://${AIRFLOW_HOST}:${AIRFLOW_WEBSERVER_PORT}:-6060/health"]
       interval: 10s
       timeout: 10s
-      retries: 5
+      retries: 3
 
     depends_on:
       - airflow-init
