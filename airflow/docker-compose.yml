@@ -1,0 +1,68 @@
+version: '3.4'
+
+# Common Configurations
+x-airflow-common:
+  &airflow-common
+  image: apache/airflow:2.3.0
+  user: "${AIRFLOW_UID:-50000}:0"
+
+  env_file:
+    - ../.env
+
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+    - /var/run/docker.sock:/var/run/docker.sock
+
+# Common Dependecies
+x-depends-on:
+  &depends-on
+  depends_on:
+    airflow-init:
+      condition: service_completed_successfully
+
+
+
+services:
+
+  # Airflow Scheduler
+  airflow-scheduler:
+    <<: *airflow-common
+    <<: *depends-on
+    container_name: airflow-${AIRFLOW_SCHEDULER_CONTAINER_NAME:-scheduler}
+    command: scheduler
+    restart: on-failure
+
+    ports:
+      - "${AIRFLOW_SCHEDULER_PORT:-8793}:8793"
+
+  # Airflow Webserver
+  airflow-webserver:
+    <<: *airflow-common
+    <<: *depends-on
+    container_name: airflow-${AIRFLOW_WEBSERVER_CONTAINER_NAME:-webserver}
+    restart: always
+    command: webserver
+
+    ports:
+      - "${AIRFLOW_WEBSERVER_PORT:-6060}:8080"
+
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://${AIRFLOW_HOST}:${AIRFLOW_WEBSERVER_PORT:-6060/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  # Airflow Initializer
+  airflow-init:
+    <<: *airflow-common
+    container_name: airflow-init
+    entrypoint: /bin/bash
+
+    command:
+      - -c
+      - |
+        mkdir -p /sources/logs /sources/dags /sources/plugins
+        chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
+        exec /entrypoint airflow version
