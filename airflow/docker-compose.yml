@@ -29,18 +29,19 @@ services:
   # Airflow Scheduler
   airflow-scheduler:
     <<: *airflow-common
-    <<: *depends-on
     container_name: airflow-${AIRFLOW_SCHEDULER_CONTAINER_NAME:-scheduler}
     command: scheduler
     restart: on-failure
 
     ports:
       - "${AIRFLOW_SCHEDULER_PORT:-8793}:8793"
+    
+    depends_on:
+      - airflow-init
 
   # Airflow Webserver
   airflow-webserver:
     <<: *airflow-common
-    <<: *depends-on
     container_name: airflow-${AIRFLOW_WEBSERVER_CONTAINER_NAME:-webserver}
     restart: always
     command: webserver
@@ -49,10 +50,13 @@ services:
       - "${AIRFLOW_WEBSERVER_PORT:-6060}:8080"
 
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://${AIRFLOW_HOST}:${AIRFLOW_WEBSERVER_PORT:-6060/health"]
+      test: ["CMD", "curl", "--fail", "http://${AIRFLOW_HOST}:${AIRFLOW_WEBSERVER_PORT}:-6060/health"]
       interval: 10s
       timeout: 10s
       retries: 5
+
+    depends_on:
+      - airflow-init
 
   # Airflow Initializer
   airflow-init:
