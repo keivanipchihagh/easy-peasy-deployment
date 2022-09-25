@@ -5,14 +5,14 @@ services:
   # pgadmin4
   pgadmin:
     container_name: ${PGDAMIN_CONTAINER_NAME:-pgadmin}
-    image: dpage/pgadmin4:6.13
+    image: dpage/pgadmin4:6.14
     restart: unless-stopped
     user: "$UID:$GID"
 
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: '${PGADMIN_CONFIG_SERVER_MODE:-False}'  # For servers-side deployment
 
     volumes:
        - ./pgadmin-data:/var/lib/pgadmin
