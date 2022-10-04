@@ -33,13 +33,13 @@ scrape_configs:
   - job_name: redis_exporters
     scrape_interval: 10s
     static_configs:
-    - targets: ['localhost:9121']
+    - targets: ['172.17.0.1:9121']
 
   # Postgres Exporters
   - job_name: postgres-exporters
     scrape_interval: 10s  
     static_configs:
-    - targets: ['localhost:9187']
+    - targets: ['172.17.0.1:9187']
   
   # Node Exporters
   - job_name: node-exporters
@@ -48,7 +48,7 @@ scrape_configs:
     - targets: ['node-exporter:9100']
   
   # Cadvisors
-  - job_name: cadvisor
+  - job_name: cadvisors
     scrape_interval: 10s  
     static_configs:
     - targets: ['cadvisor:8080']

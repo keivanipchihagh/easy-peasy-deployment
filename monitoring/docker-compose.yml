@@ -87,6 +87,22 @@ services:
     ports:
       - ${CADVISOR_PORT:-8080}:8080
     networks:
+      - monitoring
+  
+
+  # AlertManager
+  alertmanager:
+    container_name: alertmanager
+    image: prom/alertmanager:v0.23.0
+    restart: unless-stopped
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager:/config
+      - ./alertmanager/alertmanager-data:/data
+    command: --config.file=/config/alertmanager.yml --log.level=debug
+    networks:
+      - monitoring
       - epd
 
 
@@ -95,3 +111,4 @@ networks:
     external: true
   monitoring:
     internal: true
+    name: monitoring
