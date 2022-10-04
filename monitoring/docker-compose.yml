@@ -5,7 +5,7 @@ services:
   # Grafana
   grafana:
     image: grafana/grafana-enterprise:9.0.5
-    container_name: ${GRAFANA_CONTAINER_NAME:-grafana}
+    container_name: grafana
     restart: always
     user: "$UID:$GID"
     ports:
@@ -29,7 +29,7 @@ services:
   # Prometheus
   prometheus:
     image: prom/prometheus:v2.30.3
-    container_name: ${PROMETHEUS_CONTAINER_NAME:-prometheus}
+    container_name: prometheus
     restart: always
     user: "$UID:$GID"
 
@@ -41,9 +41,8 @@ services:
       - "--web.enable-lifecycle"
 
     volumes:
+      - ./prometheus/:/etc/prometheus/
       - ./prometheus/prometheus-data:/prometheus
-      - ./prometheus/rules.yml:/etc/prometheus/rules.yml
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
     networks:
       - epd
@@ -53,7 +52,7 @@ services:
   # Node Exporter
   node-exporter:
     image: prom/node-exporter:v1.3.1
-    container_name: ${NODE_CONTAINER_NAME:-node}-exporter
+    container_name: node-exporter
     restart: always
     ports:
       - ${NODE_PORT:-9100}:9100
@@ -73,7 +72,7 @@ services:
   # Cadvisor
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.44.0
-    container_name: ${CADVISOR_CONTAINER_NAME:-cadvisor}
+    container_name: cadvisor
     privileged: true
     restart: always
     devices:
@@ -88,15 +87,15 @@ services:
       - ${CADVISOR_PORT:-8080}:8080
     networks:
       - monitoring
-  
 
-  # AlertManager
+
+  # Alertmanager
   alertmanager:
     container_name: alertmanager
     image: prom/alertmanager:v0.23.0
     restart: unless-stopped
     ports:
-      - 9093:9093
+      - ${ALERTMANAGER_PORT:-9093}:9093
     volumes:
       - ./alertmanager:/config
       - ./alertmanager/alertmanager-data:/data

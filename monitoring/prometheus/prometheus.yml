@@ -8,16 +8,14 @@ global:
 
 # Rules and alerts are read from the specified file(s)
 rule_files:
-  - alert.yml
+  - alerts.yml
 
 
 # Alerting specifies settings related to the Alertmanager
 alerting:
   alertmanagers:
     - static_configs:
-      - targets:
-        # Alertmanager's default port is 9093
-        - alertmanager:9093
+      - targets: ['alertmanager:9093']
 
 
 # A list of scrape configurations that specifies a set of targets and parameters describing how to scrape them.
@@ -52,3 +50,10 @@ scrape_configs:
     scrape_interval: 10s  
     static_configs:
     - targets: ['cadvisor:8080']
+  
+
+  # abc
+  - job_name: abc
+    scrape_interval: 10s  
+    static_configs:
+    - targets: ['idonotexists:461']

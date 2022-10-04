@@ -42,7 +42,7 @@ services:
     - ${REDIS_EXPORTER_PORT:-9121}:9121
 
     command:
-      - '--redis.addr=redis://${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT:-6379}'
+      - '--redis.addr=redis://${REDIS_PASSWORD}@${HOST}:${REDIS_PORT:-6379}'
     
     networks:
       - epd
