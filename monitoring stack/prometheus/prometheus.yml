@@ -1,0 +1,54 @@
+global:
+  # How frequently to scrape targets
+  scrape_interval:     10s
+
+  # How frequently to evaluate rules
+  evaluation_interval: 10s  
+
+
+# Rules and alerts are read from the specified file(s)
+rule_files:
+  - alert.yml
+
+
+# Alerting specifies settings related to the Alertmanager
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets:
+        # Alertmanager's default port is 9093
+        - alertmanager:9093
+
+
+# A list of scrape configurations that specifies a set of targets and parameters describing how to scrape them.
+scrape_configs:
+
+  # Prometheus
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  # Redis Exporters
+  - job_name: redis_exporters
+    scrape_interval: 10s
+    static_configs:
+    - targets: ['localhost:9121']
+
+  # Postgres Exporters
+  - job_name: postgres-exporters
+    scrape_interval: 10s  
+    static_configs:
+    - targets: ['localhost:9187']
+  
+  # Node Exporters
+  - job_name: node-exporters
+    scrape_interval: 10s  
+    static_configs:
+    - targets: ['node-exporter:9100']
+  
+  # Cadvisors
+  - job_name: cadvisor
+    scrape_interval: 10s  
+    static_configs:
+    - targets: ['cadvisor:8080']

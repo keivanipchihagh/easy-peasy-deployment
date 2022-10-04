@@ -1,0 +1,97 @@
+version: "3.7"
+
+services:
+
+  # Grafana
+  grafana:
+    image: grafana/grafana-enterprise:9.0.5
+    container_name: ${GRAFANA_CONTAINER_NAME:-grafana}
+    restart: always
+    user: "$UID:$GID"
+    ports:
+      - ${GF_PORT:-3000}:3000
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: ${GF_USERS_ALLOW_SIGN_UP:-false}
+      GF_AUTH_DISABLE_LOGIN_FORM: ${GF_AUTH_DISABLE_LOGIN_FORM:-false}
+    volumes:
+      - ./grafana/grafana-data:/var/lib/grafana
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/config.ini:/etc/grafana/config.ini
+      - ./grafana/dashboards:/var/lib/grafana/dashboards # default dashboards
+    networks:
+      - epd
+      - monitoring
+
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    container_name: ${PROMETHEUS_CONTAINER_NAME:-prometheus}
+    restart: always
+    user: "$UID:$GID"
+
+    ports:
+      - ${PROMETHEUS_PORT:-9090}:9090
+  
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-lifecycle"
+
+    volumes:
+      - ./prometheus/prometheus-data:/prometheus
+      - ./prometheus/rules.yml:/etc/prometheus/rules.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+    networks:
+      - epd
+      - monitoring
+
+
+  # Node Exporter
+  node-exporter:
+    image: prom/node-exporter:v1.3.1
+    container_name: ${NODE_CONTAINER_NAME:-node}-exporter
+    restart: always
+    ports:
+      - ${NODE_PORT:-9100}:9100
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    networks:
+      - monitoring
+
+
+  # Cadvisor
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.44.0
+    container_name: ${CADVISOR_CONTAINER_NAME:-cadvisor}
+    privileged: true
+    restart: always
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /cgroup:/cgroup:ro  # Linux only
+    ports:
+      - ${CADVISOR_PORT:-8080}:8080
+    networks:
+      - epd
+
+
+networks:
+  epd:
+    external: true
+  monitoring:
+    internal: true
