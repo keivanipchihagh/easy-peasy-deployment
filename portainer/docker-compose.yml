@@ -5,7 +5,7 @@ services:
   # Portainer
   portainer:
     image: portainer/portainer-ce:2.15.0-alpine
-    container_name: ${PORTAINER_CONTAINER_NAME:-portainer}
+    container_name: portainer
     restart: unless-stopped
     command: -H tcp://portainer-agent:${PORTAINER_AGENT_PORT:-9001} --tlsskipverify
 
@@ -27,7 +27,7 @@ services:
   # Agent
   portainer-agent:
     image: portainer/agent:2.9.3
-    container_name: ${PORTAINER_CONTAINER_NAME:-portainer}-agent
+    container_name: portainer-agent
     restart: always
 
     environment:

@@ -5,7 +5,7 @@ services:
   # Postgres Server
   postgres:
     image: postgres:14-alpine
-    container_name: ${POSTGRES_CONTAINER_NAME:-postgres}
+    container_name: postgres
     restart: unless-stopped
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
@@ -27,7 +27,7 @@ services:
   # Postgres Exporter
   postgres-exporter:
     image: wrouesnel/postgres_exporter:v0.8.0
-    container_name: ${POSTGRES_CONTAINER_NAME:-postgres}-exporter
+    container_name: postgres-exporter
     restart: always
     ports:
       - ${POSTGRES_EXPORTER_PORT:-9187}:9187
@@ -39,7 +39,7 @@ services:
 
   # pgadmin4
   pgadmin:
-    container_name: ${PGDAMIN_CONTAINER_NAME:-pgadmin}
+    container_name: pgadmin
     image: dpage/pgadmin4:6.14
     restart: unless-stopped
     user: "$UID:$GID"

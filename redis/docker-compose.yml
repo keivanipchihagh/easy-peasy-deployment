@@ -5,7 +5,7 @@ services:
   # Redis Server
   redis:
     image: redis:7.0-alpine
-    container_name: ${REDIS_CONTAINER_NAME:-redis}
+    container_name: redis
     restart: always
 
     command:
@@ -35,7 +35,7 @@ services:
   # Redis Exporter
   redis-exporter:
     image: oliver006/redis_exporter:v1.43.0
-    container_name: ${REDIS_CONTAINER_NAME:-redis}-exporter
+    container_name: redis-exporter
     restart: always
 
     ports:
