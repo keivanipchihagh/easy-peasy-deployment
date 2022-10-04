@@ -15,7 +15,9 @@ rule_files:
 alerting:
   alertmanagers:
     - static_configs:
-      - targets: ['alertmanager:9093']
+      # - targets: ['alertmanager:9093']
+      - targets:
+        - 'alertmanager:9093'
 
 
 # A list of scrape configurations that specifies a set of targets and parameters describing how to scrape them.
