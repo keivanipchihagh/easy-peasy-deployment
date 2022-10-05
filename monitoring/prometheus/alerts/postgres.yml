@@ -1,0 +1,36 @@
+groups:
+
+- name: postgres
+  rules:
+
+  # Service Down
+  - alert: PostgresqlDown
+    expr: pg_up == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: Postgresql down (instance {{ $labels.instance }})
+      description: "Postgresql instance is down\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+
+  # Too Many Connections (80%)
+  - alert: PostgresqlTooManyConnections
+    expr: sum by (datname) (pg_stat_activity_count{datname!~"template.*|postgres"}) > pg_settings_max_connections * 0.8
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Postgresql too many connections (instance {{ $labels.instance }})
+      description: "PostgreSQL instance has too many connections (> 80%).\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+
+  # Deadlocks (5)
+  - alert: PostgresqlDeadLocks
+    expr: increase(pg_stat_database_deadlocks{datname!~"template.*|postgres"}[1m]) > 5
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: Postgresql dead locks (instance {{ $labels.instance }})
+      description: "PostgreSQL has dead-locks\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"

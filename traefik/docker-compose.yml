@@ -5,7 +5,7 @@ services:
   # Traefik
   traefik:
     image: traefik:v2.9
-    container_name: ${TRAEFIK_CONTAINER_NAME}
+    container_name: ${TRAEFIK_CONTAINER_NAME}traefik
     restart: always
 
     command:
