@@ -13,38 +13,3 @@ route:
   # If an alert has successfully been sent, wait 'repeat_interval' to
   # resend them.
   repeat_interval: 30m
-
-  # A default receiver
-  receiver: "slack"
-
-  # All the above attributes are inherited by all child routes and can
-  # overwritten on each.
-  routes:
-    - receiver: "slack"
-      group_wait: 10s
-      group_by:
-      - alertname
-      match_re:
-        severity: critical|warning
-      continue: true
-
-    - receiver: "pager"
-      group_by:
-      - alertname
-      group_wait: 10s
-      match_re:
-        severity: critial
-      continue: true
-
-receivers:
-  - name: "slack"
-    slack_configs:
-      - api_url: 'https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/xxxxxxxxxxxxxxxxxxxxxxxxxxx'
-        send_resolved: true
-        channel: 'monitoring'
-        text: "{{ range .Alerts }}<!channel> {{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}"
-
-  - name: "pager"
-    webhook_configs:
-      - url: http://a.b.c.d:8080/send/sms
-        send_resolved: true

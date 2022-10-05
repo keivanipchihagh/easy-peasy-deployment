@@ -1,0 +1,25 @@
+groups:
+
+- name: docker
+  rules:
+
+  # High CPU Usage (60%)
+  - alert: ContainerCpuUsage
+    expr: (sum(rate(container_cpu_usage_seconds_total{name!=""}[3m])) BY (instance, name) * 100) > 60
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Container CPU usage (instance {{ $labels.instance }})
+      description: "Container CPU usage is above 60%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+
+  # Memory Usage (50%)
+  - alert: ContainerMemoryUsage
+    expr: (sum(container_memory_working_set_bytes{name!=""}) BY (instance, name) / sum(container_spec_memory_limit_bytes > 0) BY (instance, name) * 100) > 50
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Container Memory usage (instance {{ $labels.instance }})
+      description: "Container Memory usage is above 0%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
