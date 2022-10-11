@@ -20,35 +20,11 @@ alerting:
       - targets: ['alertmanager:9093']
 
 
-# A list of scrape configurations that specifies a set of targets and parameters describing how to scrape them.
 scrape_configs:
 
-  # Prometheus
-  - job_name: 'prometheus'
+  # HTTP-SD Service discovery
+  - job_name: 'monitoring'
     scrape_interval: 5s
-    static_configs:
-      - targets: ['prometheus:9090']
-
-  # Redis Exporters
-  - job_name: redis_exporters
-    scrape_interval: 10s
-    static_configs:
-    - targets: ['172.17.0.1:9121']
-
-  # Postgres Exporters
-  - job_name: postgres-exporters
-    scrape_interval: 10s  
-    static_configs:
-    - targets: ['172.17.0.1:9187']
-  
-  # Node Exporters
-  - job_name: node-exporters
-    scrape_interval: 10s  
-    static_configs:
-    - targets: ['node-exporter:9100']
-  
-  # Cadvisors
-  - job_name: cadvisors
-    scrape_interval: 10s  
-    static_configs:
-    - targets: ['cadvisor:8080']
+    file_sd_configs:
+      - files:
+        - targets.json
