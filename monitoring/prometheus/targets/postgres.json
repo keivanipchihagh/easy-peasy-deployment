@@ -1,0 +1,9 @@
+[
+	{
+		"targets": [ "postgres:5432" ],
+		"labels": {
+			"env": "prod",
+			"job": "postgres"
+		}
+	}
+]

@@ -1,0 +1,9 @@
+[
+	{
+		"targets": [ "dejavu-redis:6379" ],
+		"labels": {
+			"env": "prod",
+			"job": "redis"
+		}
+	}
+]

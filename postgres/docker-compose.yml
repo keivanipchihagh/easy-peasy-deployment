@@ -21,21 +21,9 @@ services:
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     networks:
+      - monitoring
       - epd
 
-
-  # Postgres Exporter
-  postgres-exporter:
-    image: wrouesnel/postgres_exporter:v0.8.0
-    container_name: postgres-exporter
-    restart: always
-    ports:
-      - ${POSTGRES_EXPORTER_PORT:-9187}:9187
-    environment:
-      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${HOST}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-postgres}?sslmode=${POSTGRES_SSL:-disable}
-    networks:
-      - epd
-  
 
   # pgadmin4
   pgadmin:
@@ -50,11 +38,15 @@ services:
     volumes:
        - ./pgadmin-data:/var/lib/pgadmin
     ports:
-      - "${PGADMIN_PORT:-80}:80"
+      - "5050:80"
     networks:
       - epd
 
 
 networks:
   epd:
+    name: epd
     external: true
+  monitoring:
+    name: monitoring
+    internal: true

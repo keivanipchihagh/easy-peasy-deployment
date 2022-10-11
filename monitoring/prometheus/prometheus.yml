@@ -22,9 +22,65 @@ alerting:
 
 scrape_configs:
 
-  # HTTP-SD Service discovery
-  - job_name: 'monitoring'
-    scrape_interval: 5s
+  # Exporters
+  - job_name: 'exporter'
+    static_configs:
+      - targets:
+        - redis-exporter:9121       # Redis
+        - postgres-exporter:9187    # Postgres
+
+  # Redis targets
+  - job_name: 'redis'
     file_sd_configs:
       - files:
-        - targets.json
+        - targets/redis.json
+    metrics_path: /scrape
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: redis-exporter:9121
+
+  # # Postgres targets
+  # - job_name: 'postgres'
+  #   file_sd_configs:
+  #     - files:
+  #       - targets/postgres.json
+  #   metrics_path: /scrape
+  #   relabel_configs:
+  #     - source_labels: [__address__]
+  #       target_label: __param_target
+  #     - source_labels: [__param_target]
+  #       target_label: instance
+  #     - target_label: __address__
+  #       replacement: postgres-exporter:9187
+  
+  # Cadvisor targets
+  - job_name: 'cadvisor'
+    file_sd_configs:
+      - files:
+        - targets/cadvisor.json
+    metrics_path: /metrics
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: cadvisor:8080
+
+  # Node-Exporter targets
+  - job_name: 'node-exporter'
+    file_sd_configs:
+      - files:
+        - targets/node-exporter.json
+    metrics_path: /metrics
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: node-exporter:9100

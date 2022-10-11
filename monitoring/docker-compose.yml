@@ -2,28 +2,28 @@ version: "3.7"
 
 services:
 
-  # # Grafana
-  # grafana:
-  #   image: grafana/grafana-enterprise:9.0.5
-  #   container_name: grafana
-  #   restart: always
-  #   user: "$UID:$GID"
-  #   ports:
-  #     - ${GF_PORT:-3000}:3000
-  #   environment:
-  #     GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}
-  #     GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
-  #     GF_USERS_ALLOW_SIGN_UP: ${GF_USERS_ALLOW_SIGN_UP:-false}
-  #     GF_AUTH_DISABLE_LOGIN_FORM: ${GF_AUTH_DISABLE_LOGIN_FORM:-false}
-  #   volumes:
-  #     - ./grafana/grafana-data:/var/lib/grafana
-  #     - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
-  #     - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-  #     - ./grafana/config.ini:/etc/grafana/config.ini
-  #     - ./grafana/dashboards:/var/lib/grafana/dashboards # default dashboards
-  #   networks:
-  #     - epd
-  #     - monitoring
+  # Grafana
+  grafana:
+    image: grafana/grafana-enterprise:9.0.5
+    container_name: grafana
+    restart: always
+    user: "$UID:$GID"
+    ports:
+      - ${GF_PORT:-3000}:3000
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: ${GF_USERS_ALLOW_SIGN_UP:-false}
+      GF_AUTH_DISABLE_LOGIN_FORM: ${GF_AUTH_DISABLE_LOGIN_FORM:-false}
+    volumes:
+      - ./grafana/grafana-data:/var/lib/grafana
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/config.ini:/etc/grafana/config.ini
+      - ./grafana/dashboards:/var/lib/grafana/dashboards # default dashboards
+    networks:
+      - epd
+      - monitoring
 
 
   # Prometheus
@@ -32,18 +32,14 @@ services:
     container_name: prometheus
     restart: always
     user: "$UID:$GID"
-
     ports:
       - ${PROMETHEUS_PORT:-9090}:9090
-  
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-lifecycle"
-
     volumes:
       - ./prometheus/:/etc/prometheus/
       - ./prometheus/prometheus-data:/prometheus
-
     networks:
       - epd
       - monitoring
@@ -89,20 +85,48 @@ services:
       - monitoring
 
 
-  # # Alertmanager
-  # alertmanager:
-  #   container_name: alertmanager
-  #   image: prom/alertmanager:v0.23.0
-  #   restart: unless-stopped
-  #   ports:
-  #     - ${ALERTMANAGER_PORT:-9093}:9093
-  #   volumes:
-  #     - ./alertmanager:/config
-  #     - ./alertmanager/alertmanager-data:/data
-  #   command: --config.file=/config/alertmanager.yml --log.level=debug
-  #   networks:
-  #     - monitoring
-  #     - epd
+  # Redis Exporter
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.43.0
+    container_name: redis-exporter
+    restart: always
+    ports:
+    - ${REDIS_EXPORTER_PORT:-9121}:9121
+    environment:
+      REDIS_EXPORTER_INCL_SYSTEM_METRICS: "true"
+    command: --redis.password=${REDIS_PASSWORD}   # Global password for all redis instances for now; Use multiple exporters if essential
+    networks:
+      - monitoring
+
+
+  # Postgres Exporter
+  postgres-exporter:
+    image: wrouesnel/postgres_exporter:v0.8.0
+    container_name: postgres-exporter
+    restart: always
+    ports:
+      - ${POSTGRES_EXPORTER_PORT:-9187}:9187
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-postgres}?sslmode=${POSTGRES_SSL:-disable}"
+      PG_EXPORTER_AUTO_DISCOVER_DATABASES: "true"
+    networks:
+      - monitoring
+
+
+  # AlertManager
+  alertmanager:
+    container_name: alertmanager
+    image: prom/alertmanager:v0.23.0
+    restart: unless-stopped
+    ports:
+      - ${ALERTMANAGER_PORT:-9093}:9093
+    volumes:
+      - ./alertmanager:/config
+      - ./alertmanager/alertmanager-data:/data
+    command: --config.file=/config/alertmanager.yml --log.level=debug
+    networks:
+      - monitoring
+      - epd
 
 
 networks:
