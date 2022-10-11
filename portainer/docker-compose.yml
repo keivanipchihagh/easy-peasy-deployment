@@ -4,7 +4,7 @@ services:
 
   # Portainer
   portainer:
-    image: portainer/portainer-ce:2.15.0-alpine
+    image: portainer/portainer-ce:2.15.1-alpine
     container_name: portainer
     restart: unless-stopped
     command: -H tcp://portainer-agent:${PORTAINER_AGENT_PORT:-9001} --tlsskipverify
@@ -19,14 +19,14 @@ services:
       - ./portainer-data:/data # data persistence
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    
+
     networks:
       - epd
 
 
   # Agent
   portainer-agent:
-    image: portainer/agent:2.9.3
+    image: portainer/agent:2.15.1-alpine
     container_name: portainer-agent
     restart: always
 
