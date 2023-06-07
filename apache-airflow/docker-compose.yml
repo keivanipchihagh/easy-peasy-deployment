@@ -1,0 +1,94 @@
+version: '3.9'
+
+x-common:
+  &common
+  build:
+      context: .
+      dockerfile: Dockerfile
+  user: "${AIRFLOW_UID:-0}:0"
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "100m"
+      max-file: "3"
+  # deploy:
+  #   resources:
+  #     limits:
+  #       cpus: '0.5'
+  #       memory: 1g
+  environment:
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-airflow}"
+
+  env_file: 
+    - .env
+  volumes:
+    - ./volume/airflow/dags:/opt/airflow/dags
+    - ./volume/airflow/logs:/opt/airflow/logs
+    - ./volume/airflow/plugins:/opt/airflow/plugins
+    - /var/run/docker.sock:/var/run/docker.sock
+  networks:
+    - private
+    - nginx
+    - public
+
+x-depends-on:
+  &depends-on
+  depends_on:
+    airflow-init:
+      condition: service_completed_successfully
+
+
+services:
+  # Airflow Scheduler
+  airflow-scheduler:
+    <<: *common
+    <<: *depends-on
+    container_name: airflow-scheduler
+    healthcheck:
+      test: ["CMD-SHELL", 'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"']
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    command: scheduler
+    restart: on-failure
+    ports:
+      - "${AIRFLOW_SCHEDULER_PORT}:8793"
+
+  # Airflow Webserver
+  airflow-webserver:
+    <<: *common
+    <<: *depends-on
+    container_name: airflow-webserver
+    restart: always
+    command: webserver
+    ports:
+      - "${AIRFLOW_WEBSERVER_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
+  # Airflow Initializer
+  airflow-init:
+    <<: *common
+    container_name: airflow-init
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        mkdir -p /sources/logs /sources/dags /sources/plugins
+        chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
+        exec /entrypoint airflow version
+
+
+networks:
+  private:
+    name: private
+    external: true
+  nginx:
+    name: nginx
+    internal: true
+  public:
+    name: public
+    external: true

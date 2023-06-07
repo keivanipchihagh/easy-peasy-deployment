@@ -1,0 +1,42 @@
+version: '3.7'
+
+x-common:
+  &common
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "100m"
+      max-file: "3"
+
+services:
+
+  # Vault
+  vault:
+    <<: *common
+    image: hashicorp/vault:1.13.0-rc1
+    container_name: vault
+    restart: always
+    entrypoint: vault server -config vault/config/config.hcl
+    ports:
+      - "${VAULT_PORT}:8200"
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./volume/logs:/vault/logs
+      - ./volume/file:/vault/file
+      - ./volume/config:/vault/config
+      - ./volume/policies:/vault/policies
+      - ./vault-config.hcl:/vault/config/config.hcl
+      - /etc/letsencrypt/live/${DOMAIN}/fullchain.pem:/certs/fullchain.pem
+      - /etc/letsencrypt/live/${DOMAIN}/privkey.pem:/certs/privkey.pem
+    networks:
+      - nginx
+      - private
+
+networks:
+  nginx:
+    name: nginx
+    internal: true
+  private:
+    name: private
+    internal: true
